@@ -15,8 +15,8 @@ environment:
     $BGCMDPROMPT    used as delimiter to determine where the output ends
                     (cannot be empty)
 
-    $BGCMDSUFFIX    used to specify a private directory
-                    (can be empty)
+    $BGCMDDIR       used to specify a private directory
+                    (defaults to $HOME/.bgcmd if empty)
 
 important:
 
@@ -40,17 +40,17 @@ example usage:
     bgcmd 'echo $var'
 
     # run python in a second session at the same time
-    BGCMDSUFFIX=py BGCMDPROMPT='>>> ' bgcmd START python -i
+    BGCMDDIR=.bgpy BGCMDPROMPT='>>> ' bgcmd START python -i
 
     # show an example calculation with python
-    BGCMDSUFFIX=py BGCMDPROMPT='>>> ' bgcmd '2**100'
+    BGCMDDIR=.bgpy BGCMDPROMPT='>>> ' bgcmd '2**100'
 
     # show that our shell variable is still there:
     bgcmd 'echo $var'
 eof
 }
 
-dir=.bgcmd$BGCMDSUFFIX
+dir=${BGCMDDIR-$HOME/.bgcmd}
 
 if [[ $1 = -h || $1 = --help ]]; then
     usage
@@ -60,14 +60,14 @@ elif [[ ! $BGCMDPROMPT ]]; then
     usage >&2
     exit 1
 elif [[ $1 = START ]]; then
-    mkdir -p "$dir" || { echo could not create directory "$dir" >&2; exit 1; }
+    mkdir -p -- "$dir" || { echo "$dir" is missing and i could not create it >&2; exit 1; }
 
     # lhs can't know when rhs has exited, it must be killed manually
     # with this pidfile the next invocation can clean up an old one
-    [[ -e .bgcmd/pid ]] && kill "$(<.bgcmd/pid)" 2>/dev/null
+    [[ -e $dir/pid ]] && kill "$(<.bgcmd/pid)" 2>/dev/null
 
-    rm -f "$dir"/*
-    mkfifo "$dir"/{in,out} || { echo could not create fifos >&2; exit 1; }
+    rm -f -- "$dir"/*
+    mkfifo -- "$dir"/{in,out} || { echo could not create fifos >&2; exit 1; }
 
     {
         echo "$BASHPID" > "$dir"/pid
