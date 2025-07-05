@@ -92,6 +92,7 @@ while read -r -n1 -d ''; do
     text+=$REPLY
     [[ $text = "$BGCMDPROMPT" ]] && break
     (( ${#text} < ${#BGCMDPROMPT} )) && continue
+    printf %s "${text::1}" >> "$dir"/log
     printf %s "${text::1}"
     text=${text:1}
 done < "$dir"/out
