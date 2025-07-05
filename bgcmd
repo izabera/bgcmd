@@ -1,0 +1,97 @@
+#!/bin/bash
+
+usage () {
+    cat << 'eof'
+bgcmd manages a long running, interactive command in background
+
+usage:
+
+    bgcmd START command [args...]    # starts a command in background
+
+    bgcmd your text here             # sends this line
+
+environment:
+
+    $BGCMDPROMPT    used as delimiter to determine where the output ends
+                    (cannot be empty)
+
+    $BGCMDSUFFIX    used to specify a private directory
+                    (can be empty)
+
+important:
+
+since this does not spawn a pty, you need to make sure that your program
+actually prints the prompt when stdin/stdout/stderr are not pty's
+
+example usage:
+
+    export BGCMDPROMPT='bash-5.2$ '
+
+    # start an interactive shell in background:
+    bgcmd START bash --norc --noediting -i
+
+    # set a variable in that shell:
+    bgcmd var=7
+
+    # run a simple command:
+    bgcmd ls /
+
+    # show that our variable is still there:
+    bgcmd 'echo $var'
+
+    # run python in a second session at the same time
+    BGCMDSUFFIX=py BGCMDPROMPT='>>> ' bgcmd START python -i
+
+    # show an example calculation with python
+    BGCMDSUFFIX=py BGCMDPROMPT='>>> ' bgcmd '2**100'
+
+    # show that our shell variable is still there:
+    bgcmd 'echo $var'
+eof
+}
+
+dir=.bgcmd$BGCMDSUFFIX
+
+if [[ $1 = -h || $1 = --help ]]; then
+    usage
+    exit
+elif [[ ! $BGCMDPROMPT ]]; then
+    echo '$BGCMDPROMPT is empty' >&2
+    usage >&2
+    exit 1
+elif [[ $1 = START ]]; then
+    mkdir -p "$dir" || { echo could not create directory "$dir" >&2; exit 1; }
+
+    # lhs can't know when rhs has exited, it must be killed manually
+    # with this pidfile the next invocation can clean up an old one
+    [[ -e .bgcmd/pid ]] && kill "$(<.bgcmd/pid)" 2>/dev/null
+
+    rm -f "$dir"/*
+    mkfifo "$dir"/{in,out} || { echo could not create fifos >&2; exit 1; }
+
+    {
+        echo "$BASHPID" > "$dir"/pid
+
+        for fd in /proc/self/fd/*; do
+            fd=${fd##*/}
+            (( fd != 1 )) && exec {fd}>&-
+        done
+
+        while read -r < "$dir"/in; do
+            printf '>%s\n' "$REPLY" >> "$dir"/log
+            printf '%s\n' "$REPLY"
+        done
+    } | exec "${@:2}" > "$dir"/out 2>&1 &
+else
+    printf %s\\n "$*" > "$dir"/in
+fi
+
+text=
+
+while read -r -n1 -d ''; do
+    text+=$REPLY
+    [[ $text = "$BGCMDPROMPT" ]] && break
+    (( ${#text} < ${#BGCMDPROMPT} )) && continue
+    printf %s "${text::1}"
+    text=${text:1}
+done < "$dir"/out
