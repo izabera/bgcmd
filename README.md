@@ -36,8 +36,8 @@ faq/troubleshooting
 
 ### why is this useful?  i could already type in a repl
 
-your ai tools could not.  now they can now drive almost any most repl, as long
-as they can run arbitrary shell commands.  for instance, claude code could not
+your ai tools could not.  now they can now drive almost any repl, as long as
+they can run arbitrary shell commands.  for instance, claude code could not
 easily use the [rr](https://rr-project.org) debugger (rr is an interactive
 program but claude code would always wait for the whole session to time out or
 terminate) but now it easily can
