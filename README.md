@@ -108,6 +108,14 @@ generically for arbitrary repls.  yeah it's a bit jank
 
 
 
+### can't you do this with expect/tmux/shl/...?
+
+probably, yeah.  but this was short to write and it's generic and easy to use
+
+in most cases, you'd have a similar level of jank with those anyway
+
+
+
 ### it's 2025, why does this readme not say mcp at least x times?
 
 mcp mcp mcp mcp mcp mcp mcp mcp mcp mcp mcp mcp mcp
