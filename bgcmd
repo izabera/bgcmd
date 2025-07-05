@@ -74,7 +74,7 @@ elif [[ $1 = START ]]; then
         bash -c 'echo "$PPID"' > "$dir"/pid
 
         # there is no portable way to get the list of open fds, but this should not cause issues
-        for fd in {1..1000}; do
+        for fd in {0..1000}; do
             (( fd != 1 )) && eval "exec $fd>&-"
         done
 
