@@ -25,6 +25,10 @@ this lets you programmatically interact with repls and use their outputs
 here's a demo of a cpython session:
 ![python repl demo](python.png)
 
+and here is claude playing with sqlite3:
+
+https://github.com/user-attachments/assets/7ced94bf-63d2-4b97-968b-9fbeeae975e1
+
 
 
 faq/troubleshooting
