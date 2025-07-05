@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 usage () {
     cat << 'eof'
@@ -70,11 +70,12 @@ elif [[ $1 = START ]]; then
     mkfifo -- "$dir"/{in,out} || { echo could not create fifos >&2; exit 1; }
 
     {
-        echo "$BASHPID" > "$dir"/pid
+        # bash 3.2 doesn't have $BASHPID.....
+        bash -c 'echo "$PPID"' > "$dir"/pid
 
-        for fd in /proc/self/fd/*; do
-            fd=${fd##*/}
-            (( fd != 1 )) && exec {fd}>&-
+        # there is no portable way to get the list of open fds, but this should not cause issues
+        for fd in {1..1000}; do
+            (( fd != 1 )) && eval "exec $fd>&-"
         done
 
         while read -r < "$dir"/in; do
