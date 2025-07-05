@@ -64,7 +64,7 @@ elif [[ $1 = START ]]; then
 
     # lhs can't know when rhs has exited, it must be killed manually
     # with this pidfile the next invocation can clean up an old one
-    [[ -e $dir/pid ]] && kill "$(<.bgcmd/pid)" 2>/dev/null
+    [[ -e $dir/pid ]] && kill "$(<"$dir"/pid)" 2>/dev/null
 
     rm -f -- "$dir"/*
     mkfifo -- "$dir"/{in,out} || { echo could not create fifos >&2; exit 1; }

@@ -1,7 +1,7 @@
 bgcmd
 =====
 
-bgcmd is a way to run almost any interactive repl in background
+bgcmd is a way to run (almost) any interactive repl in background
 
 it keeps a persistent session between each line, and it prints any output
 produced by the repl
