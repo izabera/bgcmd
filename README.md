@@ -36,13 +36,13 @@ faq/troubleshooting
 
 ### why is this useful?  i could already type in a repl
 
-your ai tools could not.  now they can now drive almost any repl, as long as
-they can run arbitrary shell commands.  for instance, claude code could not
-easily use the [rr](https://rr-project.org) debugger (rr is an interactive
-program but claude code would always wait for the whole session to time out or
-terminate) but now it easily can
+your ai tools could not.  now they can drive almost any repl, as long as they
+can run arbitrary shell commands.  for instance, claude code could not easily
+use the [rr](https://rr-project.org) debugger (rr is an interactive program but
+claude code would always wait for the whole session to time out or terminate)
+but now it easily can
 
-(rr has a a gdbmi interface but it doesn't help for this)
+(rr has a gdbmi interface but it doesn't help for this)
 
 
 
@@ -136,10 +136,10 @@ a reverse debugger makes it trivial
 by default claude isn't very good at using this type of debugger, so i'm putting
 together a bit of a [guide](https://gist.github.com/izabera/9157af255a4bb5c47618d268b465ce5b)
 (very much WIP, not particularly complete/well structured).  without a tutorial
-on reverse debugging, claude seems to be aware the general capabilities, but
+on reverse debugging, claude seems to be aware of the general capabilities, but
 then it doesn't use them well at all, and it tends to jump around aimlessly,
 making little to no progress, getting stuck, hitting irrelevant breakpoints
-over and over, until it finally gets frustrated by the lack of progress and it
+over and over, until it finally gets frustrated by the lack of progress and
 gives up, and makes up an explanation that may or may not be based on reality
 
 it's just like people frfr
