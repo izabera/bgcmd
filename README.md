@@ -119,3 +119,27 @@ in most cases, you'd have a similar level of jank with those anyway
 ### it's 2025, why does this readme not say mcp at least x times?
 
 mcp mcp mcp mcp mcp mcp mcp mcp mcp mcp mcp mcp mcp
+
+
+
+one more demo because i'm feeling generous
+------------------------------------------
+
+this is claude driving rr to debug a nontrivial problem autonomously
+
+[![claude](https://asciinema.org/a/726302.svg)](https://asciinema.org/a/726302)
+
+the program aborts when it detects an incorrect value, but without reverse
+debugging it's hard to determine when this value was written to the cache.
+a reverse debugger makes it trivial
+
+by default claude isn't very good at using this type of debugger, so i'm putting
+together a bit of a [guide](https://gist.github.com/izabera/9157af255a4bb5c47618d268b465ce5b)
+(very much WIP, not particularly complete/well structured).  without a tutorial
+on reverse debugging, claude seems to be aware the general capabilities, but
+then it doesn't use them well at all, and it tends to jump around aimlessly,
+making little to no progress, getting stuck, hitting irrelevant breakpoints
+over and over, until it finally gets frustrated by the lack of progress and it
+gives up, and makes up an explanation that may or may not be based on reality
+
+it's just like people frfr
